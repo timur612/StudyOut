@@ -7,7 +7,10 @@
         <div class="card-body">
           <h5 class="card-title">Коммуникации</h5>
           <p class="card-text">Онлайн: 2</p>
-          <a href="#" class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
+          <button
+          @click="participant"
+          href="#"
+          class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</button>
         </div>
       </div>
     </div>
@@ -42,15 +45,26 @@
       </div>
     </div>
   </div>
+
   </div>
 </template>
 
 <script>
+import Router from 'vue-router'
+
 export default {
   data(){
     return{
 
     }
+  },
+  methods:{
+    participant(){
+      this.$router.push('/case')
+    },
+  },
+  components:{
+
   }
 }
 </script>

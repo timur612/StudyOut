@@ -8,25 +8,68 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
+      <ul class="nav justify-content-center">
         <li class="nav-item active">
 
-          <router-link class="nav-link text-white" to="/" >Home</router-link>
+          <router-link class="nav-link text-white" to="/">Главная</router-link>
         </li>
         <li class="nav-item">
-          <router-link class="nav-link text-white" to="/about" >About</router-link>
+          <router-link class="nav-link text-white" to="/about">Soft Skills</router-link>
         </li>
         <li class="nav-item">
-          <a class="nav-link text-white" href="#">Pricing</a>
+          <a class="nav-link text-white" href="#">{{name}}</a>
         </li>
-      </ul>
+        <li class="nav-item">
+            <a class="nav-link text-white" @click="exit">Выход</a>
+        </li>
+        </ul>
     </div>
   </nav>
 </template>
 
 <script>
+import firebase from 'firebase'
 export default {
+  data(){
+    return{
+      name:'',
+      authUser:'',
+    }
+  },
+  methods:{
+    fetchUser(){
+      db.collection('users').orderBy('createdAt').onSnapshot((querySanpshot)=>{
+        querySanpshot.forEach(doc=>{
+            if(doc.data().email==this.authUser.email){
+                this.name = doc.data().name
 
+            }
+            console.log(doc.data().email)
+            console.log(this.authUser.email)
+        })
+      })
+    },
+    exit(){
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }).catch(function(error) {
+        // An error happened.
+      });
+    }
+
+  },
+  created(){
+
+    firebase.auth().onAuthStateChanged(user=>{
+      if(user){
+        this.authUser=user;
+      }else{
+        this.authUser={}
+      }
+    })
+
+    this.fetchUser()
+  },
 }
 </script>
 

@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <Header/>
-    </div>
+
     <router-view/>
-    <Footer style="margin-top:300px"/>
+
   </div>
 </template>
 
@@ -14,6 +12,12 @@ import Footer from "@/components/Footer"
 
 export default {
   name: 'Home',
+  data(){
+    return{
+      name: '',
+      surname:''
+    }
+  },
   components: {
     Header, Footer
   }
