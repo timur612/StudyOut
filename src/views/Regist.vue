@@ -66,7 +66,7 @@ export default {
           email:document.getElementById('exampleInputEmail1').value,
           createdAt:new Date()
         })
-        this.$router.push('/');
+        this.$router.push('/interesting');
       })
     },
   }
