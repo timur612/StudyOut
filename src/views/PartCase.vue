@@ -51,6 +51,7 @@ export default {
       interest:null,
       cases:[],
       sobes:[],
+      authUser:{},
       ranNumSob:0,
       ranNumCase: 0,
 
@@ -72,12 +73,15 @@ export default {
       db.collection('users').onSnapshot((querySanpshot)=>{
         let users=[]
         querySanpshot.forEach(doc=>{
+          if(doc.data().email != this.authUser.email){
             users.push(doc.data())
+          }
+
 
         })
 
         this.sobes = users
-
+        console.log(this.sobes)
 
       });
     },
@@ -95,6 +99,14 @@ export default {
 
   },
   created(){
+    firebase.auth().onAuthStateChanged(user=>{
+      if(user){
+        this.authUser=user;
+      }else{
+        this.authUser={}
+      }
+    })
+
     this.fetchCases()
     this.fetchSobes()
   },

@@ -24,6 +24,9 @@
               </div>
             </div>
             <div class="form-group">
+              <input type="number" class="form-control" id="exAge" aria-describedby="emailHelp" placeholder="Возраст">
+            </div>
+            <div class="form-group">
               <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="E-mail">
             </div>
             <div class="form-group">
@@ -64,9 +67,11 @@ export default {
           name:document.getElementById('exName').value,
           surname:document.getElementById('exSurname').value,
           email:document.getElementById('exampleInputEmail1').value,
+          age:document.getElementById('exAge').value,
+          interests:['Игры','Музыка'],
           createdAt:new Date()
         })
-        this.$router.push('/interesting');
+        this.$router.push('/');
       })
     },
   }

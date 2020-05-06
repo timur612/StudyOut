@@ -3,28 +3,43 @@
     <div id="nav">
       <Header/>
     </div>
-    <div class="mesgs">
-      <div class="msg_history">
-        <div
-          v-for="message in messages"
-          :class="[message.author===authUser.displayName?'outgoing_msg':'incoming_msg']">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9">
+          <div class="bg-dark uk-light p-2 rounded-top container">
+            <h2>Выполните кейс</h2>
+          </div>
+          <div class="uk-light container text-white bg-white rounded">
 
-          <div :class="[message.author===authUser.displayName?'sent_msg':'received_msg']">
-            <div class="received_withd_msg mt-2">
-              <span class="time_date" > {{message.author}}:</span>
-              <p>{{message.message}}</p>
+            <div class="msg_history">
+
+              <div
+                v-for="message in messages"
+                :class="[message.author===authUser.displayName?'outgoing_msg':'incoming_msg']">
+
+                <div :class="[message.author===authUser.displayName?'sent_msg':'received_msg']">
+                  <div class="received_withd_msg mt-2">
+                    <span class="time_date" > {{message.author}}:</span>
+                    <p>{{message.message}}</p>
+                    </div>
+                </div>
               </div>
+
+            </div>
+            <div class="type_msg">
+              <div class="input_msg_write">
+                <input
+                @keyup.enter="saveMessage"
+                v-model="message"
+                type="text" class="write_msg" placeholder="Type a message" />
+                <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true" uk-icon="icon: arrow-right; ratio: 3.5"></i></button>
+              </div>
+            </div>
           </div>
         </div>
-
-      </div>
-      <div class="type_msg">
-        <div class="input_msg_write">
-          <input
-          @keyup.enter="saveMessage"
-          v-model="message"
-          type="text" class="write_msg" placeholder="Type a message" />
-          <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+        <div class="col">
+          <button class="btn btn-light p-4" style="font-size:30px;border-radius:25px" type="button" name="button">Посмотреть кейс</button>
+          <button class="btn btn_color p-4 mt-5" style="font-size:30px;border-radius:25px;width:100%" type="button" name="button">Выполнено</button>
         </div>
       </div>
     </div>
@@ -38,6 +53,69 @@ import Footer from "@/components/Footer"
 
 import firebase from "firebase"
 export default {
+  data(){
+    return{
+      message:null,
+      messages:[],
+      authUser:{},
+      author:'',
+    }
+  },
+  methods:{
+    scrollToBottom(){
+      let box = document.querySelector('.msg_history');
+      box.scrollTop=box.scrollHeight;
+    },
+    saveAuth(){
+      db.collection('users').onSnapshot((querySanpshot)=>{
+        querySanpshot.forEach(doc => {
+            if(doc.data().email == this.authUser.email){
+              this.author = doc.data().name
+              this.authUser.displayName = doc.data().name
+            }
+        });
+
+      })
+    },
+    saveMessage(){
+        //save to firestore
+        if(this.message!=null){
+          db.collection('chat').add({
+            message:this.message,
+            author:this.author,
+            createdAt:new Date()
+          }).then(()=>{
+            this.scrollToBottom();
+          })
+          this.message=null
+        }
+    },
+    fetchMessages(){
+      db.collection('chat').orderBy('createdAt').onSnapshot((querySanpshot)=>{
+        let allMessages=[];
+        querySanpshot.forEach(doc=>{
+            allMessages.push(doc.data())
+        })
+        this.messages=allMessages
+
+        setTimeout(()=>{
+          this.scrollToBottom();
+        },100)
+      })
+    },
+  },
+  created(){
+    firebase.auth().onAuthStateChanged(user=>{
+      if(user){
+        this.authUser=user;
+        console.log(this.authUser)
+      }else{
+        this.authUser={}
+      }
+    })
+    this.saveAuth()
+    this.fetchMessages()
+  },
   components:{
     Header,Footer
   }
@@ -45,6 +123,10 @@ export default {
 </script>
 
 <style lang="css" scoped>
+.btn_color{
+  background-color:#A4EDBF
+}
+
 .container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
 .inbox_people {
@@ -174,8 +256,8 @@ img{ max-width:100%;}
   font-size: 17px;
   height: 33px;
   position: absolute;
-  right: 0;
-  top: 11px;
+  right: 1%;
+  top: 20%;
   width: 33px;
 }
 .messaging { padding: 0 0 50px 0;}

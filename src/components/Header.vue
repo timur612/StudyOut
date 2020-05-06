@@ -34,7 +34,7 @@ export default {
   data(){
     return{
       name:'',
-      authUser:'',
+      authUser:{},
     }
   },
   methods:{
@@ -52,7 +52,14 @@ export default {
     },
     exit(){
       firebase.auth().signOut().then(function() {
-        // Sign-out successfu l.
+        db.collection('users').onSnapshot((querySanpshot)=>{
+          querySanpshot.forEach(doc => {
+              if(doc.data().email==this.authUser.email){
+                
+              }
+          });
+
+        })
         this.$router.push('/login')
       }).catch(function(error) {
         // An error happened.

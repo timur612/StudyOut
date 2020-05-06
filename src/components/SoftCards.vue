@@ -9,7 +9,7 @@
           <p  class="card-text">Онлайн: 2</p>
           <router-link
           to="/case"
-          
+
           class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</router-link>
         </div>
       </div>
@@ -20,7 +20,7 @@
         <div class="card-body">
           <h5 class="card-title">Нетворкинг</h5>
           <p class="card-text">Онлайн: 3</p>
-          <a href="#" class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
+          <a href="#" class="btn disabled text-muted text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
         </div>
       </div>
     </div>
@@ -30,7 +30,7 @@
         <div class="card-body">
           <h5 class="card-title">Самоконтроль</h5>
           <p class="card-text">Онлайн: 0</p>
-          <a href="#" class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
+          <a href="#" class="btn disabled text-muted text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
         </div>
       </div>
     </div>
@@ -40,7 +40,7 @@
         <div class="card-body">
           <h5 class="card-title">Тайм менеджемент</h5>
           <p class="card-text">Онлайн: 6</p>
-          <a href="#" class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
+          <a href="#" class="btn disabled text-muted text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</a>
         </div>
       </div>
     </div>

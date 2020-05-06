@@ -50,6 +50,16 @@ export default {
       }).then(()=>{
         document.getElementById('anim').classList.add('uk-animation-slide-top');
         document.getElementById('anim').classList.add('uk-animation-reverse');
+        db.collection('users').onSnapshot((querySanpshot)=>{
+          querySanpshot.forEach(doc => {
+              if(doc.data().email == document.getElementById('exampleInputEmail1').value){
+                db.collection('users').update({
+                  online:true
+                })
+              }
+          });
+
+        })
         setTimeout(()=>{
           this.$router.push('/')
         },350);
