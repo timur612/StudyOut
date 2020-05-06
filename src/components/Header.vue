@@ -29,6 +29,7 @@
 
 <script>
 import firebase from 'firebase'
+import Router from 'vue-router'
 export default {
   data(){
     return{
@@ -42,8 +43,8 @@ export default {
         querySanpshot.forEach(doc=>{
             if(doc.data().email==this.authUser.email){
                 this.name = doc.data().name
-
             }
+            this.$emit('take-name',this.name)
             console.log(doc.data().email)
             console.log(this.authUser.email)
         })
@@ -51,7 +52,8 @@ export default {
     },
     exit(){
       firebase.auth().signOut().then(function() {
-        // Sign-out successful.
+        // Sign-out successfu l.
+        this.$router.push('/login')
       }).catch(function(error) {
         // An error happened.
       });
