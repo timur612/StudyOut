@@ -5,6 +5,7 @@ import Login from '../views/Login.vue'
 import Regist from '../views/Regist.vue'
 import Interesting from '../views/Interesting.vue'
 import PartCase from '../views/PartCase.vue'
+import CaseChat from '../views/CaseChat.vue'
 
 Vue.use(VueRouter)
 
@@ -41,7 +42,12 @@ Vue.use(VueRouter)
     path: '/case',
     name: 'Partipicient',
     component: PartCase
-  }
+  },
+  {
+    path: '/case-chat',
+    name: 'CaseChat',
+    component: CaseChat
+  },
 ]
 
 const router = new VueRouter({

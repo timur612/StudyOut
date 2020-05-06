@@ -1,16 +1,16 @@
 <template lang="html">
   <div class="">
     <div class="row">
-    <div class="col-sm-3 ">
+    <div class="col-sm-3">
       <div class="card cardBack hoverable p-2 uk-animation-toggle" style="width: 18rem;">
         <img src="@/assets/comm_icon.png" class="card-img-top mx-auto" alt="" style="height:auto;width:50%">
         <div class="card-body">
           <h5 class="card-title">Коммуникации</h5>
-          <p class="card-text">Онлайн: 2</p>
-          <button
-          @click="participant"
-          href="#"
-          class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</button>
+          <p  class="card-text">Онлайн: 2</p>
+          <router-link
+          to="/case"
+          
+          class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</router-link>
         </div>
       </div>
     </div>
@@ -59,13 +59,10 @@ export default {
     }
   },
   methods:{
-    participant(){
+    takePart(){
       this.$router.push('/case')
     },
   },
-  components:{
-
-  }
 }
 </script>
 
