@@ -71,7 +71,7 @@ export default {
           interests:['Игры','Музыка'],
           createdAt:new Date()
         })
-        this.$router.push('/');
+        this.$router.push('/interesting');
       })
     },
   }
