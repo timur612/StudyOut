@@ -53,8 +53,8 @@ export default {
         db.collection('users').onSnapshot((querySanpshot)=>{
           querySanpshot.forEach(doc => {
               if(doc.data().email == document.getElementById('exampleInputEmail1').value){
-                db.collection('users').update({
-                  online:true
+                db.collection('users').doc('tz220404@gmail.com').update({
+                  online: true
                 })
               }
           });

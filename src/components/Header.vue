@@ -13,9 +13,9 @@
 
           <router-link class="nav-link text-white" to="/">Главная</router-link>
         </li>
-        <li class="nav-item">
+      <!--  <li class="nav-item">
           <router-link class="nav-link text-white" to="/about">Soft Skills</router-link>
-        </li>
+        </li>-->
         <li class="nav-item">
           <a class="nav-link text-white" href="#">{{name}}</a>
         </li>
@@ -44,26 +44,41 @@ export default {
             if(doc.data().email==this.authUser.email){
                 this.name = doc.data().name
             }
-            this.$emit('take-name',this.name)
-            console.log(doc.data().email)
-            console.log(this.authUser.email)
+
+
         })
       })
     },
+    setUserOffline(){
+
+    },
     exit(){
+
       firebase.auth().signOut().then(function() {
+          this.$router.push('/login')
+          console.log("it works1")
+
+      }).catch(function(error) {
+        // An error happened.
         db.collection('users').onSnapshot((querySanpshot)=>{
           querySanpshot.forEach(doc => {
-              if(doc.data().email==this.authUser.email){
-                
-              }
+            if(doc.data().email == this.authUser.email){
+
+              db.collection('users').doc(this.authUser.email).update({
+                  online: false,
+                  ready:false,
+                  partis:'',
+              })
+            }
+
+
           });
 
         })
-        this.$router.push('/login')
-      }).catch(function(error) {
-        // An error happened.
+        console.log("it works"+" "+error)
+        console.log(this.authUser)
       });
+    //
     }
 
   },

@@ -30,10 +30,12 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 export default {
   data(){
     return{
-      interests: []
+      interests: [],
+      authUser:{}
     }
   },
   methods:{
@@ -53,9 +55,24 @@ export default {
       this.interests.push(document.getElementById("draw").innerHTML)
       console.log(this.interests)
     },
+    addFirebase(){
+      db.collection('users').doc(this.authUser.email).update({
+        interests: this.interests
+      })
+    },
     toMain(){
+      this.addFirebase()
       this.$router.push('/')
     }
+  },
+  created(){
+    firebase.auth().onAuthStateChanged(user=>{
+      if(user){
+        this.authUser=user;
+      }else{
+        this.authUser={}
+      }
+    })
   }
 }
 </script>

@@ -32,14 +32,14 @@
                 @keyup.enter="saveMessage"
                 v-model="message"
                 type="text" class="write_msg" placeholder="Type a message" />
-                <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true" uk-icon="icon: arrow-right; ratio: 3.5"></i></button>
+                <button class="msg_send_btn" @click="saveMessage" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true" uk-icon="icon: arrow-right; ratio: 3.5"></i></button>
               </div>
             </div>
           </div>
         </div>
         <div class="col">
           <button class="btn btn-light p-4" style="font-size:30px;border-radius:25px" type="button" name="button">Посмотреть кейс</button>
-          <button class="btn btn_color p-4 mt-5" style="font-size:30px;border-radius:25px;width:100%" type="button" name="button">Выполнено</button>
+          <button  class="btn btn_color p-4 mt-5 disabled" id="check_btn" style="font-size:30px;border-radius:25px;width:100%" type="button" name="button">Выполнено</button>
         </div>
       </div>
     </div>
@@ -59,12 +59,20 @@ export default {
       messages:[],
       authUser:{},
       author:'',
+      room:1
     }
   },
   methods:{
     scrollToBottom(){
       let box = document.querySelector('.msg_history');
       box.scrollTop=box.scrollHeight;
+    },
+    toReward(){
+        document.getElementById('check_btn').classList.remove('disabled')
+        db.collection('chat').doc('rooms').delete().then(()=>{
+          console.log('deleted')
+        })
+      this.$router.push('/')
     },
     saveAuth(){
       db.collection('users').onSnapshot((querySanpshot)=>{
@@ -80,18 +88,43 @@ export default {
     saveMessage(){
         //save to firestore
         if(this.message!=null){
-          db.collection('chat').add({
-            message:this.message,
-            author:this.author,
-            createdAt:new Date()
+          db.collection('chat').doc('rooms').collection('room1').doc('message'+this.room).set({
+
+              message:this.message,
+              author:this.author,
+              createdAt:new Date()
+
           }).then(()=>{
             this.scrollToBottom();
+            this.room+=1
+
           })
           this.message=null
         }
     },
+    checkCaseSystem(){
+      let re=""
+      let keyword;
+      db.collection('cases').onSnapshot((querySanpshot)=>{
+        querySanpshot.forEach(doc => {
+          keyword = doc.data().keyword
+
+          for(let i=0;i<this.messages.length;i++){
+            console.log(new RegExp(keyword,'i').test(this.messages[i].message))
+            if(this.messages[i].message==doc.data().keyword){
+              //this.toReward()
+              document.getElementById('check_btn').classList.remove('disabled')
+              console.log('s')
+            }else{
+
+            }
+          }
+        });
+
+      })
+    },
     fetchMessages(){
-      db.collection('chat').orderBy('createdAt').onSnapshot((querySanpshot)=>{
+      db.collection('chat').doc('rooms').collection('room1').orderBy('createdAt').onSnapshot((querySanpshot)=>{
         let allMessages=[];
         querySanpshot.forEach(doc=>{
             allMessages.push(doc.data())
@@ -100,6 +133,7 @@ export default {
 
         setTimeout(()=>{
           this.scrollToBottom();
+          this.checkCaseSystem()
         },100)
       })
     },
@@ -108,7 +142,7 @@ export default {
     firebase.auth().onAuthStateChanged(user=>{
       if(user){
         this.authUser=user;
-        console.log(this.authUser)
+
       }else{
         this.authUser={}
       }

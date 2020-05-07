@@ -7,10 +7,10 @@
         <div class="card-body">
           <h5 class="card-title">Коммуникации</h5>
           <p  class="card-text">Онлайн: 2</p>
-          <router-link
+          <button
           to="/case"
-
-          class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</router-link>
+          @click="takePart"
+          class="btn text-white button_take_p uk-animation-slide-bottom dispN">Участвовать</button>
         </div>
       </div>
     </div>
@@ -51,23 +51,50 @@
 
 <script>
 import Router from 'vue-router'
+import firebase from 'firebase'
 
 export default {
   data(){
     return{
-
+      authUser:{},
     }
   },
   methods:{
     takePart(){
-      this.$router.push('/case')
+      db.collection('users').onSnapshot((querySanpshot)=>{
+        querySanpshot.forEach(doc => {
+          if(doc.data().email == this.authUser.email){
+            db.collection('users').doc(this.authUser.email).update({
+                partis: 'Коммуникация'
+            })
+
+          }
+
+
+        });
+
+      })
+
+      console.log('it worsk')
+      setTimeout(()=>{
+        this.$router.push('/case')
+      },250)
+
     },
   },
+  created(){
+    firebase.auth().onAuthStateChanged(user=>{
+      if(user){
+        this.authUser=user;
+      }else{
+        this.authUser={}
+      }
+    })
+  }
 }
-</script>
 
 
-<script>
+
 $(document).ready(function() {
   $( ".card" ).hover(
     function() {
@@ -87,6 +114,8 @@ $(document).ready(function() {
   );
 });
 </script>
+
+
 
 <style lang="css" scoped>
   .cardBack{

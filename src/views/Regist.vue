@@ -61,14 +61,17 @@ export default {
         // Handle Errors here.
         var errorCode = error.code;
         var errorMessage = error.message;
-        alert("Ваш аккаунт существует!")
+        alert("Произошла ошибка")
       }).then(()=>{
-        db.collection('users').add({
+        db.collection('users').doc(document.getElementById('exampleInputEmail1').value).set({
           name:document.getElementById('exName').value,
           surname:document.getElementById('exSurname').value,
           email:document.getElementById('exampleInputEmail1').value,
           age:document.getElementById('exAge').value,
-          interests:['Игры','Музыка'],
+          interests:[],
+          online:true,
+          ready:false,
+          partis:'',
           createdAt:new Date()
         })
         this.$router.push('/interesting');

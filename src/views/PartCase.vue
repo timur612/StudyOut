@@ -29,6 +29,7 @@
         </div>
         <div class="">
           <a @click="toCase"
+          id="ready_btn"
            class=" btn_color rounded-pill btn text-white  p-4 mt-3"
             style="font-size:35px;width:45%">Готов</a>
         </div>
@@ -54,6 +55,8 @@ export default {
       authUser:{},
       ranNumSob:0,
       ranNumCase: 0,
+      onlineUsers:[],
+      ready: false,
 
     }
   },
@@ -74,10 +77,13 @@ export default {
         let users=[]
         querySanpshot.forEach(doc=>{
           if(doc.data().email != this.authUser.email){
-            users.push(doc.data())
+            if(doc.data().online == true){
+              if(doc.data().partis == 'Коммуникация'){
+                users.push(doc.data())
+                console.log(doc.data().online)
+              }
+            }
           }
-
-
         })
 
         this.sobes = users
@@ -85,15 +91,48 @@ export default {
 
       });
     },
+    toReady(){
+      db.collection('users').onSnapshot((querySanpshot)=>{
+        let users=[]
+        querySanpshot.forEach(doc=>{
+          if(doc.data().email != this.authUser.email){
+            if(doc.data().online == true){
+              if(doc.data().partis == 'Коммуникация'){
+                if(doc.data().ready == true){
+                  document.getElementById('left').classList.add('uk-animation-slide-left')
+                  document.getElementById('left').classList.add('uk-animation-reverse')
+                  document.getElementById('right').classList.add('uk-animation-slide-right')
+                  document.getElementById('right').classList.add('uk-animation-reverse')
+                  setTimeout(()=>{
+                    this.$router.push('/case-chat')
+                  },350)
+                }
+              }
+            }
+          }
+        })
+      });
+    },
     toCase(){
-      document.getElementById('left').classList.add('uk-animation-slide-left')
-      document.getElementById('left').classList.add('uk-animation-reverse')
-      document.getElementById('right').classList.add('uk-animation-slide-right')
-      document.getElementById('right').classList.add('uk-animation-reverse')
+      db.collection('users').onSnapshot((querySanpshot)=>{
+        querySanpshot.forEach(doc => {
+          if(doc.data().email == this.authUser.email){
+            if(doc.data().online == true){
+              if(doc.data().partis == 'Коммуникация'){
+                db.collection('users').doc(doc.data().email).update({
+                    ready: true
+                })
+                document.getElementById('ready_btn').classList.add('disabled')
+                this.toReady()
+                console.log(doc.data().ready)
+                console.log(doc.data().email)
+                console.log(this.authUser.email)
+              }
+            }
+          }
+        });
 
-      setTimeout(()=>{
-        this.$router.push('/case-chat')
-      },350)
+      })
     }
 
 
